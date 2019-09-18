@@ -2,6 +2,7 @@ package tads.eaj.ufrn.exemplosqlite
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
@@ -41,7 +42,7 @@ class CarroDBOpener (context : Context) : SQLiteOpenHelper(context, CarroContrat
     }
 
     fun insert (c:Carro){
-        var banco:SQLiteDatabase = readableDatabase
+        var banco:SQLiteDatabase = writableDatabase
         try {
 
             var values = ContentValues()
@@ -59,7 +60,7 @@ class CarroDBOpener (context : Context) : SQLiteOpenHelper(context, CarroContrat
     }
 
     fun update (c:Carro){
-        var banco:SQLiteDatabase = readableDatabase
+        var banco:SQLiteDatabase = writableDatabase
         try {
 
             var values = ContentValues()
@@ -79,12 +80,87 @@ class CarroDBOpener (context : Context) : SQLiteOpenHelper(context, CarroContrat
     }
 
     fun delete (c:Carro){
-        var banco:SQLiteDatabase = readableDatabase
+        var banco:SQLiteDatabase = writableDatabase
         try{
 
             var selection = "${BaseColumns._ID} = ?"
             var whereArgs = arrayOf("${c.id}")
+            Log.i("AULABANCO", "Delete carro id = ${c.id}")
             banco.delete(CarroContrato.CarroEntry.TABLE_NAME, selection, whereArgs)
+
+        }finally {
+            banco.close()
+        }
+    }
+
+    fun findByName(nome:String): Carro{
+        var banco:SQLiteDatabase = readableDatabase
+        try{
+
+            var selection = "${CarroContrato.CarroEntry.NOME} = ?"
+            var whereArgs = arrayOf("${nome}")
+            val cursor:Cursor = banco.query(CarroContrato.CarroEntry.TABLE_NAME, null, selection, whereArgs, null, null, null, null)
+
+            cursor.moveToFirst()
+
+            var carro = Carro()
+            carro.id = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+            carro.nome = cursor.getString(cursor.getColumnIndex(CarroContrato.CarroEntry.NOME))
+            carro.tipo = cursor.getString(cursor.getColumnIndex(CarroContrato.CarroEntry.TIPO_CARRO))
+            carro.ano = cursor.getInt(cursor.getColumnIndex(CarroContrato.CarroEntry.ANO))
+            carro.desc = cursor.getString(cursor.getColumnIndex(CarroContrato.CarroEntry.DESCRICAO))
+
+            return carro
+
+        }finally {
+            banco.close()
+        }
+    }
+
+    fun findById(id:Int): Carro{
+        var banco:SQLiteDatabase = readableDatabase
+        try{
+
+            var selection = "${BaseColumns._ID} = ?"
+            var whereArgs = arrayOf("${id}")
+            val cursor:Cursor = banco.query(CarroContrato.CarroEntry.TABLE_NAME, null, selection, whereArgs, null, null, null, null)
+
+            cursor.moveToFirst()
+
+            var carro = Carro()
+            carro.id = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+            carro.nome = cursor.getString(cursor.getColumnIndex(CarroContrato.CarroEntry.NOME))
+            carro.tipo = cursor.getString(cursor.getColumnIndex(CarroContrato.CarroEntry.TIPO_CARRO))
+            carro.ano = cursor.getInt(cursor.getColumnIndex(CarroContrato.CarroEntry.ANO))
+            carro.desc = cursor.getString(cursor.getColumnIndex(CarroContrato.CarroEntry.DESCRICAO))
+
+            return carro
+
+        }finally {
+            banco.close()
+        }
+    }
+
+    fun findAll(): ArrayList<Carro>{
+        var banco:SQLiteDatabase = readableDatabase
+        try{
+
+            val cursor:Cursor = banco.query(CarroContrato.CarroEntry.TABLE_NAME, null, null, null, null, null, null, null)
+
+            var listaCarros = ArrayList<Carro>()
+
+            while( cursor.moveToNext()){
+                var carro = Carro()
+                carro.id = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+                carro.nome = cursor.getString(cursor.getColumnIndex(CarroContrato.CarroEntry.NOME))
+                carro.tipo = cursor.getString(cursor.getColumnIndex(CarroContrato.CarroEntry.TIPO_CARRO))
+                carro.ano = cursor.getInt(cursor.getColumnIndex(CarroContrato.CarroEntry.ANO))
+                carro.desc = cursor.getString(cursor.getColumnIndex(CarroContrato.CarroEntry.DESCRICAO))
+
+                listaCarros.add(carro)
+            }
+
+            return listaCarros
 
         }finally {
             banco.close()

@@ -10,13 +10,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var c1 = Carro(0,2018, "Palio", "Hatch", "Carro" )
-        var c2 = Carro(0,2017, "Fusca", "Hatch", "Carro" )
-        var c3 = Carro(0,2015, "Uno", "Hatch", "Carro" )
-        var c4 = Carro(0,2018, "HB20", "Sedan", "Carro" )
-        var c5 = Carro(0,2019, "Spin", "Sedan", "Carro" )
+        val c1 = Carro(0,2018, "Palio", "Hatch", "Carro" )
+        val c2 = Carro(0,2017, "Fusca", "Hatch", "Carro" )
+        val c3 = Carro(0,2015, "Uno", "Hatch", "Carro" )
+        val c4 = Carro(0,2018, "HB20", "Sedan", "Carro" )
+        val c5 = Carro(0,2019, "Spin", "Sedan", "Carro" )
 
-        var db = CarroDBOpener(this)
+        val db = CarroDBOpener(this)
 
         db.insert(c1)
         db.insert(c2)
@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         db.insert(c4)
         db.insert(c5)
 
+        /*
         var carros = db.findAll()
         carros.forEach { Log.i("AULABANCO", it.toString()) }
 
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         carros.forEach { Log.i("AULABANCO", it.toString()) }
 
-        var c6 = db.findByName("HB20")
+        val c6 = db.findByName("HB20")
         c6.nome = "HB20S"
 
         db.update(c6)
@@ -44,6 +45,8 @@ class MainActivity : AppCompatActivity() {
         Log.i("AULABANCO", "Carro HB20 atualizado.")
         carros = db.findAll()
         carros.forEach { Log.i("AULABANCO", it.toString()) }
+
+         */
 
     }
 }
